@@ -1,0 +1,8 @@
+.Login_bg {
+  background-image: url(https://kinsta.com/wp-content/uploads/2021/11/what-is-a-full-stack-developer.png);
+  height: 92vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+}

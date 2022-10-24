@@ -1,0 +1,13 @@
+.home__bg{
+  background-image: url(https://media.geeksforgeeks.org/wp-content/cdn-uploads/20210222183454/How-to-Become-a-Full-Stack-Web-Developer-in-2021.png);
+  height: 92vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+}
+
+.home-message-icon {
+  margin-left: 10px;
+  display: inline-block;
+}

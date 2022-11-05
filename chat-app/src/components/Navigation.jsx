@@ -9,6 +9,7 @@ const Navigation = () => {
   const [logoutUser] = useLogoutUserMutation();
   async function handleLogout(e) {
     e.preventDefault();
+    localStorage.clear()
     await logoutUser(user)
     //redirect to home pages
     window.location.replace('/')
@@ -25,7 +26,7 @@ const Navigation = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
             {!user && (
-              <LinkContainer to="/login">
+              <LinkContainer to="/Login">
                 <Nav.Link>Login</Nav.Link>
               </LinkContainer>
             )}

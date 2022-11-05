@@ -32,7 +32,8 @@ app.post('/register', async (req, res) => {
   }
 })
 
-app.post('/login', async (req, res) => {
+
+app.post('/user/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findByCredentials(email, password);
@@ -50,6 +51,42 @@ const io = require('socket.io')(server, {
     origin: 'http://localhost:3000',
     method: ['GET', "POST",]
   }
+})
+
+app.get('/room', (req,res)=> {
+  res.json(rooms)
+})
+async function getLastMessagesFromRoom(room){
+  let roomMessages = await Message.aggregate([
+    {$match: {to: room}},
+    {$group: {_id: "$date",messagesByDate: {$push : "$$ROOT"}}}
+  ])
+   return roomMessages;
+}
+
+function sortRoomMessagesByDate(messages){
+  return messages.sort(function(a,b){
+    let date1 = a._id.split('/');
+    let date2 = b._id.split('/');
+    date1 = date1[2] + date1[0] + date1[1]
+    date2 = date2[2] + date2[0] + date2[1]
+
+    return  date1 < date2 ? -1 : 1
+  })
+}
+
+//socket connection 
+io.on("connection", (socket)=> {
+  socket.on('new-user', async()=> {
+    const members = await User.find();
+    io.emit('new-user', members)
+  })
+  socket.on('join-room' ,async(room)=> {
+    socket.join(room);
+    let roomMessages = await getLastMessagesFromRoom(room);
+    roomMessages = sortRoomMessagesByDate(roomMessages);
+    socket.emit('room-messages', roomMessages);
+  })
 })
 
 server.listen(PORT, () => {

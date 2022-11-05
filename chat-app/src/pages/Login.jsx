@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState ,useContext } from 'react'
 import { Row, Col, Container, Form } from 'react-bootstrap';
 import { useLoginUserMutation } from '../services/AppApi'
 import { Link, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import "./Login.css"
+import { AppContext } from '../Context/appContext';
 function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const navigate = useNavigate()
-  const [loginUser, { isLoading, error }] = useLoginUserMutation()
-
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const {socket} = useContext(AppContext);
+  const [loginUser, { isLoading, error }] = useLoginUserMutation();
   const onChangeEmail = (e) => {
     const value = e.target.value
     setEmail(value)
@@ -22,12 +23,10 @@ function Login() {
   function handleLogin(e) {
     e.preventDefault();
     //login logic
-    loginUser({ email, password })
-      .then(({ data }) => {
+    loginUser({ email, password }).then(({ data }) => {
         if (data) {
-          //socket work
-          //navigate to the chat 
-          navigate("/chat")
+          socket.emit('new-user');
+          navigate("/chat");
         }
       })
 

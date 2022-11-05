@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { ListGroup, ListGroupItem } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
+import { AppContext } from '../Context/appContext'
 
 function Sidebar() {
-  const rooms = ['first room', 'second room', 'third room']
-  const user = useSelector((state) => state.user)
+  const rooms = ['first room', 'second room', 'third room'];
+  const user = useSelector((state) => state.user);
+  const { socket } = useContext(AppContext);
+  socket.off('new-user').on('new-user', (payload) => {
+    console.log(payload);
+  });
   if (!user) {
     return <>
       <h1>Please Login</h1>
